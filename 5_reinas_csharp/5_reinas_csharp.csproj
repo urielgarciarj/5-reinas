@@ -83,5 +83,8 @@
   <ItemGroup>
     <None Include="Resources\corona.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\coronachida.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
