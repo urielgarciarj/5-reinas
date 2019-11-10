@@ -13,11 +13,6 @@ using System.Windows.Forms;
 
 namespace _5_reinas_csharp
 {
-    public class Pos
-    {
-        public int x, y;
-    }
-
     public partial class Form1 : Form
     {
         static Image reinaImg;
