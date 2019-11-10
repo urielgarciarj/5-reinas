@@ -309,23 +309,6 @@ namespace _5_reinas_csharp
             mostrarAjedrez2(tablero);
 
             await placeQueen(tablero, 0);
-            /*
-            for (int t = 0; t < GlobalData.n; t++)
-            {
-                for (int i = 0; i < GlobalData.n; i++)
-                {
-                    for (int j = 0; j < GlobalData.n; j++)
-                    {
-                        tablero[i, j] = 0;
-                    }
-                }
-
-                tablero[t, 0] = 1;
-
-                mostrarAjedrez2(tablero);
-
-                await placeQueen(tablero, 1);
-            }*/
         }
     }
 }
