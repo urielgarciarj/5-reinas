@@ -36,7 +36,25 @@ namespace _5_reinas_csharp
         private void Button1_Click(object sender, EventArgs e)
         {
             //elmein();
+
             backtrack();
+        }
+
+        private void btnPause_Click(object sender, EventArgs e)
+        {
+            GlobalData.isRuning = !GlobalData.isRuning;
+
+            btnPause.Text = GlobalData.isRuning ? "Pause" : "Continue";
+
+            if(GlobalData.isRuning)
+            {
+                GlobalData.backtrackingPause.SetResult(false);
+            }
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private void Ajedrez_Load(object sender, EventArgs e)
@@ -48,6 +66,8 @@ namespace _5_reinas_csharp
         {
             public static int n = 5;
             public static int[] reinas = new int[n];
+            public static bool isRuning = false;
+            public static TaskCompletionSource<bool> backtrackingPause;
         }
 
         static async Task colocarReina(int i, bool solucion)
@@ -230,11 +250,21 @@ namespace _5_reinas_csharp
             MessageBox.Show("¡10 SOLUCIONES ENCONTRADAS!", "Finalizado");
         }
 
-        static async Task<bool> placeQueen(int[,] tablero, int _n)
+        async Task<bool> placeQueen(int[,] tablero, int _n)
         {
+            if(!GlobalData.isRuning)
+            {
+                GlobalData.backtrackingPause = new TaskCompletionSource<bool>();
+                await GlobalData.backtrackingPause.Task;
+            }
+
             if (_n >= GlobalData.n)
             {
-                MessageBox.Show("Solucion encontrada");
+                GlobalData.isRuning = false;
+                btnPause.Invoke(new MethodInvoker(delegate { btnPause.Text = GlobalData.isRuning ? "Pause" : "Continue"; }));
+                GlobalData.backtrackingPause = new TaskCompletionSource<bool>();
+                await GlobalData.backtrackingPause.Task;
+
                 return true;
             }
 
@@ -247,33 +277,27 @@ namespace _5_reinas_csharp
                     tablero[i, _n] = 1;
 
                     mostrarAjedrez2(tablero);
-                    await Task.Delay(100);
+                    await Task.Delay(500);
 
                     if (await placeQueen(tablero, _n + 1))
                     {
                         ramaErronea = false;
-                        //return true;
                     }
 
                     tablero[i, _n] = 0;
                 }
-
-                /*for (int j = 0; j < GlobalData.n; j++)
+                else
                 {
-                    if(tablero[i,j] == 0) //esta esta celda vacia?
-                    {
-                        if(esPosible2(tablero, i,j)) //ninguna reina amenaza esta celda?
-                        {
-                            tablero[i, j] = 1;
+                    tablero[i, _n] = 1;
 
-                            mostrarAjedrez2(tablero);
+                    mostrarAjedrez2(tablero);
 
-                            await Task.Delay(100);
+                    pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Show(); }));
+                    await Task.Delay(500);
+                    pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Hide(); }));
 
-                            await placeQueen(tablero, _n + 1); 
-                        }
-                    }
-                }*/
+                    tablero[i, _n] = 0;
+                }
             }
 
             //Si llega aquí es una rama erronea
@@ -284,12 +308,15 @@ namespace _5_reinas_csharp
             }
             else
             {
-                MessageBox.Show("Rama mala");
+                pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Show(); }));
+                await Task.Delay(500);
+                pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Hide(); }));
+
                 return false;
             }
         }
 
-        static async void backtrack()
+        async void backtrack()
         {
             int[,] tablero = new int[GlobalData.n, GlobalData.n];
 
@@ -302,6 +329,8 @@ namespace _5_reinas_csharp
             }
             
             mostrarAjedrez2(tablero);
+
+            GlobalData.isRuning = true;
 
             await placeQueen(tablero, 0);
         }

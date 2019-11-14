@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Button1 = new System.Windows.Forms.Button();
+            this.btnStart = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
@@ -54,6 +54,9 @@
             this.pictureBox23 = new System.Windows.Forms.PictureBox();
             this.pictureBox24 = new System.Windows.Forms.PictureBox();
             this.pictureBox25 = new System.Windows.Forms.PictureBox();
+            this.btnPause = new System.Windows.Forms.Button();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.pbFailure = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -79,17 +82,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFailure)).BeginInit();
             this.SuspendLayout();
             // 
-            // Button1
+            // btnStart
             // 
-            this.Button1.Location = new System.Drawing.Point(590, 202);
-            this.Button1.Name = "Button1";
-            this.Button1.Size = new System.Drawing.Size(110, 23);
-            this.Button1.TabIndex = 0;
-            this.Button1.Text = "Calcular Solucion";
-            this.Button1.UseVisualStyleBackColor = true;
-            this.Button1.Click += new System.EventHandler(this.Button1_Click);
+            this.btnStart.Location = new System.Drawing.Point(580, 70);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(89, 23);
+            this.btnStart.TabIndex = 0;
+            this.btnStart.Text = "Iniciar";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.Button1_Click);
             // 
             // pictureBox1
             // 
@@ -317,12 +321,45 @@
             this.pictureBox25.TabIndex = 25;
             this.pictureBox25.TabStop = false;
             // 
+            // btnPause
+            // 
+            this.btnPause.Location = new System.Drawing.Point(580, 124);
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(89, 23);
+            this.btnPause.TabIndex = 26;
+            this.btnPause.Text = "Pausar";
+            this.btnPause.UseVisualStyleBackColor = true;
+            this.btnPause.Click += new System.EventHandler(this.btnPause_Click);
+            // 
+            // btnExit
+            // 
+            this.btnExit.Location = new System.Drawing.Point(580, 183);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(89, 23);
+            this.btnExit.TabIndex = 27;
+            this.btnExit.Text = "Salir";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
+            // pbFailure
+            // 
+            this.pbFailure.BackColor = System.Drawing.Color.Red;
+            this.pbFailure.Location = new System.Drawing.Point(599, 293);
+            this.pbFailure.Name = "pbFailure";
+            this.pbFailure.Size = new System.Drawing.Size(80, 78);
+            this.pbFailure.TabIndex = 28;
+            this.pbFailure.TabStop = false;
+            this.pbFailure.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.InactiveCaption;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.pbFailure);
+            this.Controls.Add(this.btnExit);
+            this.Controls.Add(this.btnPause);
             this.Controls.Add(this.pictureBox25);
             this.Controls.Add(this.pictureBox24);
             this.Controls.Add(this.pictureBox23);
@@ -348,7 +385,7 @@
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.Button1);
+            this.Controls.Add(this.btnStart);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Ajedrez_Load);
@@ -377,13 +414,14 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox23)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox24)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox25)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFailure)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button Button1;
+        private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
@@ -409,6 +447,9 @@
         private System.Windows.Forms.PictureBox pictureBox23;
         private System.Windows.Forms.PictureBox pictureBox24;
         private System.Windows.Forms.PictureBox pictureBox25;
+        private System.Windows.Forms.Button btnPause;
+        private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.PictureBox pbFailure;
     }
 }
 
