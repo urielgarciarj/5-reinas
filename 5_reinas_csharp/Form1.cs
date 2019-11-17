@@ -22,6 +22,9 @@ namespace _5_reinas_csharp
         public Form1()
         {
             InitializeComponent();
+
+            btnPause.Hide();
+
             boxes = new PictureBox[,] {
                 { pictureBox1, pictureBox2, pictureBox3, pictureBox4, pictureBox5 },
                 { pictureBox6, pictureBox7, pictureBox8, pictureBox9, pictureBox10 },
@@ -48,7 +51,11 @@ namespace _5_reinas_csharp
 
             if(GlobalData.isRuning)
             {
-                GlobalData.backtrackingPause.SetResult(false);
+                GlobalData.backtrackingPause?.SetResult(false);
+            }
+            else
+            {
+                GlobalData.backtrackingPause = new TaskCompletionSource<bool>();
             }
         }
 
@@ -68,6 +75,19 @@ namespace _5_reinas_csharp
             public static int[] reinas = new int[n];
             public static bool isRuning = false;
             public static TaskCompletionSource<bool> backtrackingPause;
+            public static BacktrackTree tree;
+            public static string[] logLines = { };
+
+            public static void Log(string _log)
+            {
+                string[] temp = logLines;
+                logLines = new string[temp.Length + 1];
+
+                for (int i = 0; i < temp.Length; i++)
+                    logLines[i] = temp[i];
+
+                logLines[temp.Length] = _log;
+            }
         }
 
         static async Task colocarReina(int i, bool solucion)
@@ -250,16 +270,38 @@ namespace _5_reinas_csharp
             MessageBox.Show("¡10 SOLUCIONES ENCONTRADAS!", "Finalizado");
         }
 
+        int[] GetSolutionArray(int[,] board)
+        {
+            int[] result = new int[GlobalData.n];
+
+            for(int i = 0; i < result.Length; i++)
+            {
+                for(int j = 0; i < result.Length; j++)
+                {
+                    if(board[i,j] == 1)
+                    {
+                        result[i] = j;
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         async Task<bool> placeQueen(int[,] tablero, int _n)
         {
             if(!GlobalData.isRuning)
             {
-                GlobalData.backtrackingPause = new TaskCompletionSource<bool>();
                 await GlobalData.backtrackingPause.Task;
             }
 
             if (_n >= GlobalData.n)
             {
+                //Soución encontrada
+                GlobalData.tree.InsertSolution(GetSolutionArray(tablero));
+                GlobalData.Log("Solution found");
+
                 GlobalData.isRuning = false;
                 btnPause.Invoke(new MethodInvoker(delegate { btnPause.Text = GlobalData.isRuning ? "Pause" : "Continue"; }));
                 GlobalData.backtrackingPause = new TaskCompletionSource<bool>();
@@ -274,10 +316,11 @@ namespace _5_reinas_csharp
             {
                 if(esPosible2(tablero, i, _n))
                 {
+                    GlobalData.Log("Position (" + i + ", " + _n + ") is avilable");
                     tablero[i, _n] = 1;
 
                     mostrarAjedrez2(tablero);
-                    await Task.Delay(500);
+                    await Task.Delay(50);
 
                     if (await placeQueen(tablero, _n + 1))
                     {
@@ -288,28 +331,28 @@ namespace _5_reinas_csharp
                 }
                 else
                 {
+                    GlobalData.Log("Position (" + i + ", " + _n + ") is unavilable");
                     tablero[i, _n] = 1;
 
                     mostrarAjedrez2(tablero);
 
                     pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Show(); }));
-                    await Task.Delay(500);
+                    await Task.Delay(50);
                     pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Hide(); }));
 
                     tablero[i, _n] = 0;
                 }
             }
-
-            //Si llega aquí es una rama erronea
-            //MessageBox.Show("Rama erronea");
+            
             if(!ramaErronea)
             {
                 return true;
             }
             else
             {
+                GlobalData.Log("Got to the end of a branch without finding a solution");
                 pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Show(); }));
-                await Task.Delay(500);
+                await Task.Delay(50);
                 pbFailure.Invoke(new MethodInvoker(delegate { pbFailure.Hide(); }));
 
                 return false;
@@ -318,6 +361,8 @@ namespace _5_reinas_csharp
 
         async void backtrack()
         {
+            btnPause.Invoke(new MethodInvoker(delegate { btnPause.Show(); }));
+
             int[,] tablero = new int[GlobalData.n, GlobalData.n];
 
             for (int i = 0; i < GlobalData.n; i++)
@@ -327,12 +372,29 @@ namespace _5_reinas_csharp
                     tablero[i, j] = 0;
                 }
             }
-            
+            GlobalData.Log("Board initialized: width = "+ tablero.GetLength(0) + ", height = " + tablero.GetLength(1));
+
+            GlobalData.tree = new BacktrackTree(GlobalData.n);
+            GlobalData.Log("Tree Initialized: width = "+ GlobalData.tree.Depth + ", depth = " + GlobalData.tree.Depth);
+
             mostrarAjedrez2(tablero);
 
             GlobalData.isRuning = true;
 
             await placeQueen(tablero, 0);
+
+            writeBacktrackLog();
+
+            MessageBox.Show("Soluciones encontradas");
+
+            btnPause.Invoke(new MethodInvoker(delegate { btnPause.Hide(); }));
+        }
+
+        void writeBacktrackLog()
+        {
+            string absolutePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), @"backtrack_log.txt");
+            File.WriteAllText(absolutePath, String.Empty);
+            File.WriteAllLines(absolutePath, GlobalData.logLines);
         }
     }
 }
