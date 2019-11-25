@@ -94,54 +94,7 @@ namespace _5_reinas_csharp
             }
         }
 
-        static async Task colocarReina(int i, bool solucion)
-        {
-            if (i >= GlobalData.n)
-                return;
-
-            GlobalData.reinas[i] = 0;
-
-            int k = 0;
-            do
-            {
-                GlobalData.reinas[i] = k;
-                k++;
-                solucion = false;
-
-                mostrarAjedrez();
-                await Task.Delay(1);
-                await colocarReina(i + 1, solucion);
-                estaSolucionado();
-                //System.Threading.Thread.Sleep(1000);
-                //if (esPosible(i))
-                //{
-                //await colocarReina(i + 1, solucion);
-                //}
-
-            } while ((k < GlobalData.n));
-        }
-
-        static bool esPosible(int i)
-        {
-            bool v = true;
-            for (int t = 0; t < GlobalData.n; t++)
-            {
-                if (i != t && GlobalData.reinas[t] != -1 && GlobalData.reinas[i] != -1)
-                {
-                    if (GlobalData.reinas[i] == GlobalData.reinas[t])
-                    {
-                        return false;
-                    }
-                    if (Math.Abs(GlobalData.reinas[i] - GlobalData.reinas[t]) == Math.Abs(i - t))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return v;
-        }
-
-        static bool esPosible2(int[,] tablero, int x, int y)
+        static bool esPosible(int[,] tablero, int x, int y)
         {
             for (int i = 0; i < GlobalData.n; i++)
             {
@@ -157,83 +110,6 @@ namespace _5_reinas_csharp
                 }
             }
             return true;
-        }
-
-        static bool estaSolucionado()
-        {
-            for (int i = 0; i < GlobalData.n; i++)
-            {
-                if (GlobalData.reinas[i] != -1)
-                {
-                    if (!esPosible(i))
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            MessageBox.Show("Solucion encontrada");
-            return true;
-        }
-
-        static void mostrarAjedrez()
-        {
-            int[,] tablero = new int[GlobalData.n, GlobalData.n];
-
-
-            for (int i = 0; i < GlobalData.n; i++)
-            {
-                for (int j = 0; j < GlobalData.n; j++)
-                {
-                    tablero[i, j] = 0;
-                }
-            }
-
-            //Console.WriteLine("Mostrando arreglo");
-            //for (int i = 0; i < GlobalData.n; i++)
-            //{
-                //Console.WriteLine("", GlobalData.reinas[i], "@");
-            //}
-
-            //Console.WriteLine();
-
-
-            //VALOR DEL ARREGLO AL TABLERO
-            for (int i = 0; i < GlobalData.n; i++)
-            {
-                for (int j = 0; j < GlobalData.n; j++)
-                {
-                    if (GlobalData.reinas[j] >= 0)
-                    {
-                        tablero[GlobalData.reinas[j], j] = 1;
-                    }
-                }
-            }
-
-            //MOSTRAR TABLERO
-            //Console.WriteLine("MOSTRANDO TABLERO");
-            for (int i = 0; i < GlobalData.n; i++)
-            {
-                for (int j = 0; j < GlobalData.n; j++)
-                {
-                    if(tablero[i, j] == 1)
-                    {
-                        //poner reina
-                        boxes[i, j].Image = reinaImg;
-                    }
-                    else{
-                        //Quitar reina
-                        boxes[i, j].Image = null;
-                    }
-                    //System.Console.Write("", tablero[i, j], "@");
-                }
-                //Console.WriteLine("");
-            }
-            //Console.WriteLine("");
-            
         }
 
         static void mostrarAjedrez2(int[,] tablero)
@@ -257,21 +133,6 @@ namespace _5_reinas_csharp
                 }
             };
 
-        }
-
-        static async void elmein()
-        {
-            bool flag = true;
-
-            for (int i = 0; i < GlobalData.n; i++)
-            {
-                GlobalData.reinas[i] = -1;
-            }
-
-            await colocarReina(0, flag);
-
-            mostrarAjedrez();
-            MessageBox.Show("¡10 SOLUCIONES ENCONTRADAS!", "Finalizado");
         }
 
         int[] GetSolutionArray(int[,] board)
@@ -318,7 +179,7 @@ namespace _5_reinas_csharp
 
             for (int i = 0; i < GlobalData.n; i++)
             {
-                if(esPosible2(tablero, i, _n))
+                if(esPosible(tablero, i, _n))
                 {
                     GlobalData.Log("Position (" + i + ", " + _n + ") is avilable");
                     tablero[i, _n] = 1;
