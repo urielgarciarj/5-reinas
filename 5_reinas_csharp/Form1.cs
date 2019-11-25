@@ -80,13 +80,16 @@ namespace _5_reinas_csharp
 
             public static void Log(string _log)
             {
-                string[] temp = logLines;
+				string absolutePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), @"backtrack_log.txt");
+				File.AppendText(absolutePath, _log);
+				
+                /*string[] temp = logLines;
                 logLines = new string[temp.Length + 1];
 
                 for (int i = 0; i < temp.Length; i++)
                     logLines[i] = temp[i];
 
-                logLines[temp.Length] = _log;
+                logLines[temp.Length] = _log;*/
             }
         }
 
