@@ -81,7 +81,8 @@ namespace _5_reinas_csharp
             public static void Log(string _log)
             {
 				string absolutePath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), @"backtrack_log.txt");
-				File.AppendText(absolutePath, _log);
+				StreamWriter sw = File.AppendText(absolutePath);
+				sw.WriteLine(_log);
 				
                 /*string[] temp = logLines;
                 logLines = new string[temp.Length + 1];
@@ -386,7 +387,7 @@ namespace _5_reinas_csharp
 
             await placeQueen(tablero, 0);
 
-            writeBacktrackLog();
+            //writeBacktrackLog();
 
             MessageBox.Show("Soluciones encontradas");
 
